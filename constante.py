@@ -9,6 +9,8 @@ IMAGE__ALIEN_FILE = "alien.gif"
 
 IMAGE__BOOM_FILE = "boom.gif"
 
+SCORE_FILE = "scores.txt"
+
 
 SHIP_WIDTH = 50
 SHIP_HEIGHT = 50

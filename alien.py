@@ -48,6 +48,15 @@ class Alien_fleet:
         return None
     
 
+    def remove (self, alien):
+        self.fleet.remove(alien)
+    
+    def remove_fleet(self):
+        for alien in self.fleet :
+            alien.delete()
+        self.fleet.clear()
+
+
 class Alien:
     def __init__(self, posW, posH, screen):
 
@@ -65,12 +74,14 @@ class Alien:
         else:
             print(f"Error: Image file '{alien_image_path }' not found!")
             return
+
         self.boom_image_path = os.path.join(cte.DIRECTORY_IMAGE, cte.IMAGE__BOOM_FILE)
         if os.path.exists(self.boom_image_path ):
             screen.addshape(self.boom_image_path )
         else:
             print(f"Error: Image file '{self.boom_image_path }' not found!")
             return
+
         self.alien_t = Turtle()
         self.alien_t.shape(alien_image_path)
         self.alien_t.speed(5)
@@ -87,7 +98,12 @@ class Alien:
         self.move(cte.ALIEN_WIDTH ,cte.ALIEN_HEIGHT /5, speed )
 
     def move(self, step_x, step_y, speed):
-        
+
+        # if not self : return # if the object has been delete during the ontimer
+        if not hasattr(self, 'alien_t'): 
+            print ('move impossible no alien_t')
+            return
+
         if not self.available : return # if n move launch by timer : security
 
      
@@ -110,7 +126,11 @@ class Alien:
         if current_y < - cte.SCREEN_HEIGHT/2 :
             self.move_possible = False
             game.game_global.end_game()
-            self.delete()
+
+            # self.delete()
+            # if self in game.game_global.alien_fleet.fleet :
+                # game.game_global.alien_fleet.remove(self)
+
 
         if self.move_possible :
             self.screen.ontimer(lambda: self.move(step_x,step_y,speed), speed)
@@ -122,8 +142,14 @@ class Alien:
 
 
     def set_crash(self):
+
+
         self.available = False
         self.delete()
+        if self in game.game_global.alien_fleet.fleet :
+            game.game_global.alien_fleet.remove(self)
+        # game.game_global.alien_fleet.fleet.remove(self)
+
 
         # if alien fleet is empty, go to the next level
         if not game.game_global.alien_fleet.fleet :
@@ -135,10 +161,13 @@ class Alien:
     def delete(self):
         # Memory management : need to del object in the fleet_list and the object itself
         #  
-        if self in game.game_global.alien_fleet.fleet :
-            game.game_global.alien_fleet.fleet.remove(self)
+
+        if not hasattr(self, 'alien_t'): 
+            print ('delete impossible no alien_t')
+            return
         self.alien_t.hideturtle()
-        # self.alien_t.clear()
+       
+
         del self.alien_t
         del self
         return
