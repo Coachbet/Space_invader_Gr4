@@ -1,89 +1,80 @@
-import threading# Import threading to create threads for alien movement
-import random # Import random for random movements
-from turtle import Turtle# Import Turtle module for game graphics
-import os# Import os for file path operations
+import threading
+import random
+from turtle import Turtle
+import os
 
-import constante as cte# Import constants from constante.py
-import game# Import the game module
-
-from bomb import Bomb # Import the Bomb class
+import constante as cte
+import game
+from bomb import Bomb
 
 class Alien_fleet:
-    def __init__(self, size, posW, posH, screen):# Initialize the alien fleet attributes
-        self.screen = screen # Screen instance
-        self.fleet = []# List to store Alien instances
-        self.posX_init = posW # Initial X position of the fleet
-        self.posY_init = posH# Initial Y position of the fleet
+    def __init__(self, size, posW, posH, screen):
+        self.screen = screen
+        self.fleet = []
+        self.posX_init = posW
+        self.posY_init = posH
         
 
-    def launch_tempo(self):# Placeholder for future functionality
+    def launch_tempo(self):
         return
 
     def start(self):
-          """
-        Create aliens and add them to the fleet list.
-        Each alien starts its movement in its own thread with a delay.
         """
+            Input : none
+            Output: none
+            create alien and insert in the fleet list
+            activate alien in it own thread delayed (i seconds)
+        """
+        for i in range (0,cte.NB_MAX_ALIEN):
+            alien = Alien(self.posX_init + i*100 ,self.posY_init ,self.screen)
+            self.fleet.append(alien)
 
-        for i in range (0,cte.NB_MAX_ALIEN):  # Iterate for the maximum number of aliens
-            alien = Alien(self.posX_init + i*100 ,self.posY_init ,self.screen)# Create an alien
-            self.fleet.append(alien)# Add the alien to the fleet list
-
-            th_timer = threading.Timer(i, alien.start)  # Start alien movement in a separate thread with a delay
-
+            th_timer = threading.Timer(i, alien.start)
             th_timer.start()
 
         return
 
     def get_alien_contact(self , x_bullet, y_bullet):
-      """
-        Check if a bullet has hit any alien in the fleet.
-        Returns the alien if a hit is detected.
         """
+            input position bullet
+            output 
 
-        for alien in self.fleet :# Iterate through the fleet
-            x_alien, y_alien = alien.get_position()# Get the position of the alien
-              # Check if the bullet coordinates overlap with the alien
+            parse list des blocs : later
+            parse fleet of alien
+                get coord
+                check if contact, yes return alien oject
+
+        """
+        
+        for alien in self.fleet :
+            x_alien, y_alien = alien.get_position()
             if x_bullet < x_alien + cte.ALIEN_WIDTH / 2 and x_bullet > x_alien - cte.ALIEN_WIDTH /2 :
                 if y_bullet - cte.BULLET_HEIGHT > y_alien - cte.ALIEN_HEIGHT/2 : 
-                    print("contact")# Log the contact
-
+                    print("contact")
                     return (alien)
 
-        return None # No contact detected
+        return None
     
     def remove_alien (self, alien):
-          """
-        Remove an alien from the fleet.
-        """
-
         self.fleet.remove(alien)
     
     def remove_fleet(self):
-         """
-        Remove all aliens from the fleet.
-        """
         for alien in self.fleet :
             alien.delete()
         self.fleet.clear()
 
     def get_nb_alien(self):
-         """
-        Return the number of remaining aliens in the fleet.
-        """
         return len(self.fleet)
-    
-# Class representing an individual alien
 
 class Alien:
-    def __init__(self, posW, posH, screen):    # Initialize alien attributes
+    def __init__(self, posW, posH, screen):
 
-        self.move_possible = True  # Flag for movement
-        self.current_x = posW# Current X position
-        self.current_y = posH# Current Y position
-        self.width = cte.ALIEN_WIDTH# Alien width
-        self.heigth = cte.ALIEN_HEIGHT  # Alien height
-        self.previous_nb_alien = cte.NB_MAX_ALIEN# Initial number of aliens
+        self.move_possible = True
+        self.current_x = posW
+        self.current_y = posH
+        self.width = cte.ALIEN_WIDTH
+        self.heigth = cte.ALIEN_HEIGHT # if later we want modify alien with new model and new file
+        self.previous_nb_alien = cte.NB_MAX_ALIEN
         self.screen = screen
 
         alien_image_path = os.path.join(cte.DIRECTORY_IMAGE, cte.IMAGE__ALIEN_FILE)
@@ -92,16 +83,14 @@ class Alien:
         else:
             print(f"Error: Image file '{alien_image_path }' not found!")
             return
-        
- # Load explosion image
+
         self.boom_image_path = os.path.join(cte.DIRECTORY_IMAGE, cte.IMAGE__BOOM_FILE)
         if os.path.exists(self.boom_image_path ):
             screen.addshape(self.boom_image_path )
         else:
             print(f"Error: Image file '{self.boom_image_path }' not found!")
             return
-        
- # Create the Turtle object for the alien
+
         self.alien_t = Turtle()
         self.alien_t.shape(alien_image_path)
         self.alien_t.speed(5)
@@ -110,14 +99,14 @@ class Alien:
         self.alien_t.pendown()
 
     def get_position(self):
-         """
-        Return the current position of the alien.
-        """
         return self.alien_t.position()
 
     def start (self):
-      """
-        Start the alien's movement based on the current game level.
+        """
+        Input : none
+        Output: none
+        calculate speed
+        call move
         """
         # speed increases by 10% by level
         speed = int(cte.ALIEN_SPEED -( game.game_global.get_level() - 1)*cte.ALIEN_SPEED/10 )

@@ -1,21 +1,21 @@
-from turtle import Turtle# Import the Turtle class
-import turtle# Import the turtle module
+from turtle import Turtle
+import turtle
 
-import datetime# Import the datetime module for date handling
-import heapq# Import heapq for finding top scores
+import datetime
+import heapq
 
 
-import constante as cte# Import constants from constante.py
-from alien import Alien_fleet# Import the Alien_fleet class
+import constante as cte
+from alien import Alien_fleet
 
-class Game :# Class to manage the game
+class Game :
     """
-    class Game 
+    class Game
 
     Manage bullet count and score
     Only one instance used as a global variable
     """
-    def __init__(self): # Initialize game attributes
+    def __init__(self):
         """
         __init__
         Input : none
@@ -23,18 +23,16 @@ class Game :# Class to manage the game
 
         Initialize attribut and Turtle object
         """
-        self.game_in_progress = True# Whether a game is ongoing
-        self.level = 1# Current level
-        self.score = 0# Current score
-        self.game_time  = 0# Track game time
-        self.bullet_count = cte.MAX_BULLET_BY_LEVEL# Initial bullet count
-        self.alien_fleet = None# Placeholder for alien fleet
-        self.ship = None# Placeholder for the ship
-        self.screen = 0# Placeholder for the screen
-        self.game_msg_t = Turtle()# Turtle object for displaying messages
-        self.game_msg_t.hideturtle()  # Hide the message turtle
-        
-        # Additional turtles for level, score, bullets, and help messages
+        self.game_in_progress = True
+        self.level = 1
+        self.score = 0
+        self.game_time  = 0
+        self.bullet_count = cte.MAX_BULLET_BY_LEVEL
+        self.alien_fleet = None
+        self.ship = None
+        self.screen = 0
+        self.game_msg_t = Turtle()
+        self.game_msg_t.hideturtle()  
         self.game_level_t_t = Turtle()
         self.game_level_t_t.hideturtle()
         self.game_bullet_t = Turtle()
@@ -154,11 +152,15 @@ class Game :# Class to manage the game
         return
 
     def display_bullet_count(self, action, value):
-         """
-        Displays the bullet count or a related message.
-        - action="no more": Displays a "No more bullets" message.
-        - action="in progress": Displays the current bullet count.
         """
+        display_bullet_count
+        Input : action, value
+        Output : none
+
+        Display the bullet count
+        Displat value or message depending on action
+        """   
+
         self.game_bullet_t.clear()
         self.game_bullet_t.penup()
         self.game_bullet_t.goto(350,380)
@@ -176,26 +178,17 @@ class Game :# Class to manage the game
         return    
     
     def display_msg(self,  size, color,texte, offset_y):
-         """
-        Displays a message on the screen.
-        - size: Font size.
-        - color: Text color.
-        - texte: The message to display.
-        - offset_y: Vertical offset for the message.
-        """
         self.game_msg_t.penup()
         self.game_msg_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
         self.game_msg_t.pendown()
         self.game_msg_t.color(color)
         self.game_msg_t.write(texte, align="Center", font=("Arial", size, "bold"))
         
-    def hide_msg(self):#  Clears the current message from the screen.
-
+    def hide_msg(self):
         self.game_msg_t.clear()
      
 
-    def new_game(self,status):#Starts a new game or resets the current game state.
-
+    def new_game(self,status):
         self.game_in_progress = True
 
         if self.alien_fleet :  
@@ -223,7 +216,7 @@ class Game :# Class to manage the game
 
     
 
-    def next_level(self):#Moves the game to the next level.
+    def next_level(self):
         if not self.game_in_progress : return
         
         self.display_msg(20, "yellow","NEXT LEVEL",0)
@@ -242,7 +235,7 @@ class Game :# Class to manage the game
         self.alien_fleet.start()
         return
     
-    def end_game(self):#Ends the current game and displays the top scores.
+    def end_game(self):
         # allow to execute only once per game the method 
         if not self.game_in_progress : return
         self.game_in_progress = False
@@ -269,7 +262,7 @@ class Game :# Class to manage the game
 
         return   
     
-    def get_top_scores(self, top_n):#   Retrieves the top N scores from the score file
+    def get_top_scores(self, top_n):
         try:
             # Lire le fichier et extraire les données
             scores = []
@@ -288,8 +281,7 @@ class Game :# Class to manage the game
         except Exception as e:
             print(f"An error occurred: {e}")
 
-    def record_score(self, player, score, level):#Records the player's score in the score file.
-
+    def record_score(self, player, score, level):
         
         current_date = datetime.datetime.now().strftime("%d/%m/%Y")
 
@@ -303,8 +295,7 @@ class Game :# Class to manage the game
         
         return 
     
-    def display_help(self):#Displays help instructions on the screen.
-
+    def display_help(self):
         self.hide_msg() # if help asked and the score is displayed
 
         self.game_help_t.penup()
@@ -312,26 +303,25 @@ class Game :# Class to manage the game
         offset_y = 20
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
-        texte = "<- and -> to move  "
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
+        texte = "< > to moove "
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "nornal"))
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 2*offset_y)
-        texte = "space to shoot bullet "
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
+        texte = "Space to shoot bullet"
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "nornal"))
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 3*offset_y)
-        texte = "n for new game"
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
+        texte = "n for new "
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "nornal"))
 
         self.game_help_t.pendown()
 
         return
     
-    def clear_help(self):  # Clears the help instructions from the screen.
-
+    def clear_help(self):
         self.game_help_t.clear()
         return
     
         
         
-game_global = Game()# Initialize the game as a global variable
+game_global = Game()
