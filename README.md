@@ -172,6 +172,162 @@ Worst case: Like the average case, the worst-case time complexity is also O(n*lo
 Space complexity: Heap Sort is in-place, meaning it requires O(1) extra space
 
 
+Pseudo code Pseudocode for space_invaders.py (Main Game Logic)
+Function create_screen:
+    Create a screen object
+    Set screen title to "Space Invader"
+    Set screen background to black
+    Set screen dimensions using constants
+    Disable automatic updates for manual control
+    Return the screen
+
+Function update(screen):
+    Refresh the screen display
+    Schedule the next update based on frames per second (FPS)
+
+Function space_invaders:
+    Create and configure the game screen
+    Add the screen to the global game object
+
+    Create a player-controlled ship
+    Add the ship to the global game object
+
+    Start a new game
+
+    Create and start an alien fleet
+
+    Define player controls:
+        - "Left" key moves the ship left
+        - "Right" key moves the ship right
+        - "Space" key fires a bullet
+        - "N" or "n" starts a new game
+        - "H" or "h" displays help
+        - "Escape" clears the help message
+
+    Start the game update loop
+    Keep the game running until closed
+
+
+Pseudocode for game.py (Game Management)
+Class Game:
+    Attributes:
+        - Game state (e.g., in progress or not)
+        - Current level, score, and bullet count
+        - Instances of the screen, ship, and alien fleet
+
+    Function new_game(status):
+        Reset the game state to start fresh
+        Clear any existing aliens
+        Reset the level and score
+        Reset the player's bullet count
+        If the game is not in "init" mode, create a new alien fleet
+
+    Function next_level:
+        If the game is over, do nothing
+        Display "NEXT LEVEL" message temporarily
+        Increase the level by 1
+        Reset the player's bullet count
+        Clear existing aliens and create a new fleet
+
+    Function end_game:
+        If the game is already over, do nothing
+        End the game
+        Clear all aliens
+        Display "GAME OVER" message
+        Ask the player for their name
+        Save the score and show the top scores
+
+
+Pseudocode for ship.py (Player's Ship)
+Class Ship:
+    Attributes:
+        - Current position
+        - Bullet list and count
+        - Screen instance
+
+    Function move(direction):
+        If direction is "Left" and not at the edge:
+            Move ship left by a fixed step
+        If direction is "Right" and not at the edge:
+            Move ship right by a fixed step
+
+    Function fire:
+        If out of bullets, display "No more bullets"
+        Otherwise:
+            Create a new bullet
+            Add it to the bullet list
+            Decrease bullet count
+            Start bullet movement
+
+
+Pseudocode for alien.py (Alien Fleet and Movement)
+Class Alien_fleet:
+    Attributes:
+        - List of aliens
+        - Screen instance
+        - Initial position
+
+    Function start:
+        For each alien in the fleet:
+            Create an alien at the designated position
+            Add the alien to the fleet
+            Start the alien movement in its own thread
+
+    Function remove_fleet:
+        For each alien in the fleet:
+            Delete the alien
+        Clear the fleet list
+
+Class Alien:
+    Attributes:
+        - Current position
+        - Movement status
+        - Images for normal and explosion states
+
+    Function move(step_x, step_y, speed):
+        Calculate new position based on step sizes
+        If the alien is out of bounds, reverse direction
+        If the alien is off-screen, end the game
+        If movement is still possible, schedule the next move
+
+    Function display_crash:
+        Change the alien's image to an explosion
+        Schedule the alien's deletion
+
+
+Pseudocode for bullet.py (Bullet Movement)
+Class Bullet:
+    Attributes:
+        - Current position
+        - Screen instance
+
+    Function move:
+        Calculate the next position of the bullet
+        If the bullet is off-screen, delete it
+        If the bullet hits an alien:
+            Trigger the alien's explosion
+            Increase the player's score
+            Delete the bullet
+        Otherwise:
+            Schedule the next move
+
+
+Pseudocode for bomb.py (Bomb Logic)
+Class Bomb:
+    Attributes:
+        - Current position
+        - Screen instance
+
+    Function move:
+        Calculate the next position of the bomb
+        If the bomb is off-screen, delete it
+        If the bomb hits the player's ship:
+            Trigger the ship's explosion
+            End the game
+        Otherwise:
+            Schedule the next move
+
+
 
 
 
