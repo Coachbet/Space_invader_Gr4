@@ -47,6 +47,7 @@ class Alien_fleet:
 
         return None
     
+
     def remove (self, alien):
         self.fleet.remove(alien)
     
@@ -54,6 +55,7 @@ class Alien_fleet:
         for alien in self.fleet :
             alien.delete()
         self.fleet.clear()
+
 
 class Alien:
     def __init__(self, posW, posH, screen):
@@ -87,6 +89,7 @@ class Alien:
         self.alien_t.goto(posW,posH)
         self.alien_t.pendown()
 
+
     def get_position(self):
         return self.alien_t.position()
 
@@ -95,10 +98,12 @@ class Alien:
         self.move(cte.ALIEN_WIDTH ,cte.ALIEN_HEIGHT /5, speed )
 
     def move(self, step_x, step_y, speed):
+
         # if not self : return # if the object has been delete during the ontimer
         if not hasattr(self, 'alien_t'): 
             print ('move impossible no alien_t')
             return
+
         if not self.available : return # if n move launch by timer : security
 
      
@@ -121,12 +126,15 @@ class Alien:
         if current_y < - cte.SCREEN_HEIGHT/2 :
             self.move_possible = False
             game.game_global.end_game()
+
             # self.delete()
             # if self in game.game_global.alien_fleet.fleet :
                 # game.game_global.alien_fleet.remove(self)
 
+
         if self.move_possible :
             self.screen.ontimer(lambda: self.move(step_x,step_y,speed), speed)
+
 
     def display_crash(self):
         self.alien_t.shape(self.boom_image_path)
@@ -135,11 +143,13 @@ class Alien:
 
     def set_crash(self):
 
+
         self.available = False
         self.delete()
         if self in game.game_global.alien_fleet.fleet :
             game.game_global.alien_fleet.remove(self)
         # game.game_global.alien_fleet.fleet.remove(self)
+
 
         # if alien fleet is empty, go to the next level
         if not game.game_global.alien_fleet.fleet :
@@ -151,11 +161,13 @@ class Alien:
     def delete(self):
         # Memory management : need to del object in the fleet_list and the object itself
         #  
+
         if not hasattr(self, 'alien_t'): 
             print ('delete impossible no alien_t')
             return
         self.alien_t.hideturtle()
        
+
         del self.alien_t
         del self
         return

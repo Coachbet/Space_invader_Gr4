@@ -5,6 +5,7 @@ import datetime
 import heapq
 
 
+
 import constante as cte
 from alien import Alien_fleet
 
@@ -24,6 +25,7 @@ class Game :
         Initialize attribut and Turtle object
         """
         self.game_in_progress = True
+
         self.level = 1
         self.score = 0
         self.game_time  = 0
@@ -167,6 +169,7 @@ class Game :
             
         return    
     
+
     def display_msg(self,  size, color,texte, offset_y):
         self.game_msg_t.penup()
         self.game_msg_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
@@ -208,10 +211,13 @@ class Game :
         if self.alien_fleet :  
             self.alien_fleet.remove_fleet()
 
+
         self.game_msg_t.clear()
 
         # initialize the level
+
         self.set_level("reset",5) # 5 instead of 1 for testing
+
         self.display_level()
 
         # initialize the score
@@ -221,20 +227,24 @@ class Game :
         # Initialize the Ship and amunitions
         self.ship.set_bullet_loader(cte.MAX_BULLET_BY_LEVEL + cte.NB_BULLET_BY_LEVEL * (self.level-1))
         self.display_bullet_count("in progress", self.ship.get_bullet_loader())
+
         
         if status != "init" :
         # initialize a new Alien_fleet and start the game with 
             self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
             self.alien_fleet.start()
 
+
     def hide_msg(self):
         self.game_msg_t.clear()
 
     def next_level(self):
 
+
         self.display_msg(20, "yellow","NEXT LEVEL",0)
         self.screen.ontimer(self.hide_msg, 1000) 
         
+
         self.set_level("add",1)
         self.display_level()
 
@@ -247,6 +257,7 @@ class Game :
         self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
         self.alien_fleet.start()
         return
+
 
     def get_top_scores(self, top_n):
         try:
@@ -288,5 +299,6 @@ class Game :
         
         return 
         
+
         
 game_global = Game()

@@ -81,6 +81,7 @@ def space_invaders():
 """
     # initialize the level
     game.game_global.set_level("reset",5)
+
     game.game_global.display_level()
 
     # initialize the score
@@ -96,7 +97,9 @@ def space_invaders():
     # initialize the Alien_fleet and start the game with 
     game.game_global.alien_fleet = Alien_fleet(40,  -380, 380, screen)
     game.game_global.alien_fleet.start()
+
 """
+
 
 space_invaders()
 
