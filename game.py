@@ -40,9 +40,12 @@ class Game :
         self.game_bullet_t = Turtle()
         self.game_bullet_t.shape("arrow")
         self.game_bullet_t.hideturtle()
-        self.game_score = Turtle()
-        self.game_score.shape("arrow")
-        self.game_score.hideturtle()
+        self.game_score_t = Turtle()
+        self.game_score_t.shape("arrow")
+        self.game_score_t.hideturtle()
+        self.game_help_t = Turtle()
+        self.game_help_t.hideturtle()  
+
 
 
     def add_screen (self,screen):
@@ -91,13 +94,13 @@ class Game :
         Display the score
         """   
     
-        self.game_score.clear()
-        self.game_score.penup()
-        self.game_score.goto(230,380)
-        self.game_score.pendown()
-        self.game_score.color("white")
+        self.game_score_t.clear()
+        self.game_score_t.penup()
+        self.game_score_t.goto(230,380)
+        self.game_score_t.pendown()
+        self.game_score_t.color("white")
         texte = "Score : "+ str(self.score)
-        self.game_score.write(texte, align="right", font=("Arial", 10, "normal"))
+        self.game_score_t.write(texte, align="right", font=("Arial", 10, "normal"))
         return
     
     def get_level(self):
@@ -178,6 +181,65 @@ class Game :
         self.game_msg_t.write(texte, align="Center", font=("Arial", size, "bold"))
         
 
+    def hide_msg(self):
+        self.game_msg_t.clear()
+     
+
+    def new_game(self,status):
+        self.game_in_progress = True
+
+        if self.alien_fleet :  
+            self.alien_fleet.remove_fleet()
+
+
+        self.game_msg_t.clear()
+
+        # initialize the level
+
+        self.set_level("reset",5) # 5 instead of 1 for testing
+
+
+        self.set_level("reset",5) # 5 instead of 1 for testing
+
+
+        self.display_level()
+
+        # initialize the score
+        self.set_score("reset",0)
+        self.display_score()
+
+        # Initialize the Ship and amunitions
+        self.ship.set_bullet_loader(cte.MAX_BULLET_BY_LEVEL + cte.NB_BULLET_BY_LEVEL * (self.level-1))
+        self.display_bullet_count("in progress", self.ship.get_bullet_loader())
+        
+        if status != "init" :
+        # initialize a new Alien_fleet and start the game with 
+            self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
+            self.alien_fleet.start()
+
+
+    
+
+    def next_level(self):
+
+
+        self.display_msg(20, "yellow","NEXT LEVEL",0)
+        self.screen.ontimer(self.hide_msg, 1000) 
+        
+        self.set_level("add",1)
+        self.display_level()
+
+# Initialize  amunitions
+        self.ship.set_bullet_loader(cte.MAX_BULLET_BY_LEVEL + cte.NB_BULLET_BY_LEVEL * (self.level-1))
+        self.display_bullet_count("in progress", self.ship.get_bullet_loader())
+        
+        self.alien_fleet.fleet.clear()
+        # initialize the Alien_fleet and start the game with 
+        self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
+        self.alien_fleet.start()
+        return
+
+    
     def end_game(self):
         # allow to execute only once per game the method 
         if not self.game_in_progress : return
@@ -203,61 +265,8 @@ class Game :
             self.display_msg(10,"white", display_string, i*20)
             i+=1
 
-        return    
-
-    def new_game(self,status):
-        self.game_in_progress = True
-
-        if self.alien_fleet :  
-            self.alien_fleet.remove_fleet()
-
-
-        self.game_msg_t.clear()
-
-        # initialize the level
-
-        self.set_level("reset",5) # 5 instead of 1 for testing
-
-        self.display_level()
-
-        # initialize the score
-        self.set_score("reset",0)
-        self.display_score()
-
-        # Initialize the Ship and amunitions
-        self.ship.set_bullet_loader(cte.MAX_BULLET_BY_LEVEL + cte.NB_BULLET_BY_LEVEL * (self.level-1))
-        self.display_bullet_count("in progress", self.ship.get_bullet_loader())
-
-        
-        if status != "init" :
-        # initialize a new Alien_fleet and start the game with 
-            self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
-            self.alien_fleet.start()
-
-
-    def hide_msg(self):
-        self.game_msg_t.clear()
-
-    def next_level(self):
-
-
-        self.display_msg(20, "yellow","NEXT LEVEL",0)
-        self.screen.ontimer(self.hide_msg, 1000) 
-        
-
-        self.set_level("add",1)
-        self.display_level()
-
-# Initialize  amunitions
-        self.ship.set_bullet_loader(cte.MAX_BULLET_BY_LEVEL + cte.NB_BULLET_BY_LEVEL * (self.level-1))
-        self.display_bullet_count("in progress", self.ship.get_bullet_loader())
-        
-        self.alien_fleet.fleet.clear()
-        # initialize the Alien_fleet and start the game with 
-        self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
-        self.alien_fleet.start()
-        return
-
+        return   
+    
 
     def get_top_scores(self, top_n):
         try:
@@ -271,15 +280,10 @@ class Game :
                         date, name, score, level = parts
                         scores.append((int(score), name, date, level))
             
-            # Utilisation de heapq pour obtenir les N meilleurs scores efficacement
-            
+
+            # Use heapq to get the top_n top scores
             top_scores = heapq.nlargest(top_n, scores)
 
-            # Affichage des résultats
-            print(f"Top {top_n} scores:")
-            for score, name, date , level in top_scores:
-                print(f"{name}: {score} (Date: {date}) Level : {score}")
-            
             return top_scores
         
         except Exception as e:
@@ -298,6 +302,35 @@ class Game :
 
         
         return 
+
+    
+    def display_help(self):
+        self.hide_msg() # if help asked and the score is displayed
+
+        self.game_help_t.penup()
+        self.game_help_t.color("white")
+        offset_y = 20
+        
+        self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
+        texte = "first line "
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+        
+        self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 2*offset_y)
+        texte = "seconf line "
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+        
+        self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 3*offset_y)
+        texte = "third line"
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+
+        self.game_help_t.pendown()
+
+        return
+    
+    def clear_help(self):
+        self.game_help_t.clear()
+        return
+    
         
 
         

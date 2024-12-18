@@ -27,7 +27,7 @@ def create_screen():
     """
     # screen = turtle.Screen()
     screen = Screen()
-    screen.title("Space Invader _ Grp 3")
+    screen.title("Space Invader _ Grp 3 (H for help)")
     screen.bgcolor("black")
     screen.setup (width=cte.SCREEN_WIDTH, height=cte.SCREEN_HEIGHT)
     screen.tracer(0)
@@ -72,6 +72,12 @@ def space_invaders():
     screen.onkeypress(lambda: ship.move("Left"),"Left") 
     screen.onkeypress(lambda: ship.move("Right"),"Right") 
     screen.onkeypress(ship.fire, "space") 
+
+    screen.onkeypress(game.game_global.display_help, "h") 
+    screen.onkeypress(game.game_global.display_help, "H") 
+    screen.onkeypress(game.game_global.clear_help, "Escape") 
+    
+    
 
     update(screen)  
     screen.mainloop()

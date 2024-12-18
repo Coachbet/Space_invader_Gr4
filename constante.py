@@ -6,7 +6,6 @@ STEP_SHIP = 5
 DIRECTORY_IMAGE = "images"
 IMAGE__SHIP_FILE = "space_ship.gif"
 IMAGE__ALIEN_FILE = "alien.gif"
-
 IMAGE__BOOM_FILE = "boom.gif"
 
 SCORE_FILE = "scores.txt"

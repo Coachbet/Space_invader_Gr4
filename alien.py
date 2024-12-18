@@ -47,6 +47,13 @@ class Alien_fleet:
 
         return None
     
+    def remove_alien (self, alien):
+        self.fleet.remove(alien)
+    
+    def remove_fleet(self):
+        for alien in self.fleet :
+            alien.delete()
+        self.fleet.clear()
 
     def remove (self, alien):
         self.fleet.remove(alien)
@@ -89,7 +96,6 @@ class Alien:
         self.alien_t.goto(posW,posH)
         self.alien_t.pendown()
 
-
     def get_position(self):
         return self.alien_t.position()
 
@@ -127,14 +133,9 @@ class Alien:
             self.move_possible = False
             game.game_global.end_game()
 
-            # self.delete()
-            # if self in game.game_global.alien_fleet.fleet :
-                # game.game_global.alien_fleet.remove(self)
-
 
         if self.move_possible :
             self.screen.ontimer(lambda: self.move(step_x,step_y,speed), speed)
-
 
     def display_crash(self):
         self.alien_t.shape(self.boom_image_path)
@@ -147,9 +148,8 @@ class Alien:
         self.available = False
         self.delete()
         if self in game.game_global.alien_fleet.fleet :
-            game.game_global.alien_fleet.remove(self)
+            game.game_global.alien_fleet.remove_alien(self)
         # game.game_global.alien_fleet.fleet.remove(self)
-
 
         # if alien fleet is empty, go to the next level
         if not game.game_global.alien_fleet.fleet :
