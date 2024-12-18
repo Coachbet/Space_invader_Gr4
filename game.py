@@ -304,15 +304,15 @@ class Game :
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
         texte = "< > to moove "
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "nornal"))
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 2*offset_y)
         texte = "Space to shoot bullet"
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "nornal"))
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 3*offset_y)
         texte = "n for new "
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "nornal"))
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
 
         self.game_help_t.pendown()
 
