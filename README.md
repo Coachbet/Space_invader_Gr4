@@ -1,5 +1,6 @@
 # Space_invader_Gr4
-Computional thinking project: Space inavder 
+Computional thinking project: Space invader 
+
 Louis:
 
 ● space_invader_gr4/version_1.0
