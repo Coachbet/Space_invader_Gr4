@@ -47,7 +47,7 @@ class Bullet:
         if alien != None:
             self.move_possible = False
             # alien explosion
-
+            
             alien.display_crash()
             game.game_global.set_score("add",1)
             game.game_global.display_score()

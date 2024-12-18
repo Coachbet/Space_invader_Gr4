@@ -27,7 +27,7 @@ def create_screen():
     """
     # screen = turtle.Screen()
     screen = Screen()
-    screen.title("Space Invader _ Grp 3")
+    screen.title("Space Invader _ Grp 3 (H for help)")
     screen.bgcolor("black")
     screen.setup (width=cte.SCREEN_WIDTH, height=cte.SCREEN_HEIGHT)
     screen.tracer(0)
@@ -58,8 +58,33 @@ def space_invaders():
     screen = create_screen()
     game.game_global.add_screen(screen)
 
+    ship = Ship( -cte.SCREEN_WIDTH/2 + 20 ,- cte.SCREEN_HEIGHT/2 + 40 , screen)
+    game.game_global.add_ship(ship)
+    game.game_global.new_game("init")
+    game.game_global.alien_fleet = Alien_fleet(40,  -380, 380, screen)
+    game.game_global.alien_fleet.start()
+
+
+    # define user action with keyboard
+    screen.listen()
+    screen.onkeypress(lambda: game.game_global.new_game (""), "n") 
+    screen.onkeypress(lambda: game.game_global.new_game (""), "N")
+    screen.onkeypress(lambda: ship.move("Left"),"Left") 
+    screen.onkeypress(lambda: ship.move("Right"),"Right") 
+    screen.onkeypress(ship.fire, "space") 
+    screen.onkeypress(game.game_global.display_help, "h") 
+    screen.onkeypress(game.game_global.display_help, "H") 
+    screen.onkeypress(game.game_global.clear_help, "Escape") 
+    
+    
+    update(screen)  
+    screen.mainloop()
+
+    return
+
+"""
     # initialize the level
-    game.game_global.set_level("reset",1)
+    game.game_global.set_level("reset",5)
     game.game_global.display_level()
 
     # initialize the score
@@ -75,18 +100,7 @@ def space_invaders():
     # initialize the Alien_fleet and start the game with 
     game.game_global.alien_fleet = Alien_fleet(40,  -380, 380, screen)
     game.game_global.alien_fleet.start()
-    
-    # define user action with keyboard
-    screen.listen()
-    screen.onkeypress(lambda: ship.move("Left"),"Left") 
-    screen.onkeypress(lambda: ship.move("Right"),"Right") 
-    screen.onkeypress(ship.fire, "space") 
-    screen.onkeypress(game.game_global.new_game, "n") 
-
-    update(screen)  
-    screen.mainloop()
-
-    return
+"""
 
 space_invaders()
 

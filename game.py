@@ -1,6 +1,8 @@
 from turtle import Turtle
 import turtle
-import time
+
+import datetime
+import heapq
 
 
 import constante as cte
@@ -20,7 +22,8 @@ class Game :
         Output : none
 
         Initialize attribut and Turtle object
-        """    
+        """
+        self.game_in_progress = True
         self.level = 1
         self.score = 0
         self.game_time  = 0
@@ -35,9 +38,12 @@ class Game :
         self.game_bullet_t = Turtle()
         self.game_bullet_t.shape("arrow")
         self.game_bullet_t.hideturtle()
-        self.game_score = Turtle()
-        self.game_score.shape("arrow")
-        self.game_score.hideturtle()
+        self.game_score_t = Turtle()
+        self.game_score_t.shape("arrow")
+        self.game_score_t.hideturtle()
+        self.game_help_t = Turtle()
+        self.game_help_t.hideturtle()  
+
 
     def add_screen (self,screen):
         """
@@ -85,13 +91,13 @@ class Game :
         Display the score
         """   
     
-        self.game_score.clear()
-        self.game_score.penup()
-        self.game_score.goto(230,380)
-        self.game_score.pendown()
-        self.game_score.color("white")
+        self.game_score_t.clear()
+        self.game_score_t.penup()
+        self.game_score_t.goto(230,380)
+        self.game_score_t.pendown()
+        self.game_score_t.color("white")
         texte = "Score : "+ str(self.score)
-        self.game_score.write(texte, align="right", font=("Arial", 10, "normal"))
+        self.game_score_t.write(texte, align="right", font=("Arial", 10, "normal"))
         return
     
     def get_level(self):
@@ -163,28 +169,27 @@ class Game :
             
         return    
     
-    def display_msg(self,size,color,texte):
+    def display_msg(self,  size, color,texte, offset_y):
         self.game_msg_t.penup()
-        self.game_msg_t.home()
+        self.game_msg_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
         self.game_msg_t.pendown()
         self.game_msg_t.color(color)
         self.game_msg_t.write(texte, align="Center", font=("Arial", size, "bold"))
+        
+    def hide_msg(self):
+        self.game_msg_t.clear()
+     
 
-    def end_game(self):
-    
-        self.display_msg(30,"red","END GAME")
-        # add score on another line just behind TODO
+    def new_game(self,status):
+        self.game_in_progress = True
 
-        return    
-
-    def new_game(self):
-        self.alien_fleet.fleet.clear()
+        if self.alien_fleet :  
+            self.alien_fleet.remove_fleet()
 
         self.game_msg_t.clear()
 
         # initialize the level
-        self.set_level("reset",1)
-
+        self.set_level("reset",5) # 5 instead of 1 for testing
         self.display_level()
 
         # initialize the score
@@ -194,21 +199,19 @@ class Game :
         # Initialize the Ship and amunitions
         self.ship.set_bullet_loader(cte.MAX_BULLET_BY_LEVEL + cte.NB_BULLET_BY_LEVEL * (self.level-1))
         self.display_bullet_count("in progress", self.ship.get_bullet_loader())
+        
+        if status != "init" :
+        # initialize a new Alien_fleet and start the game with 
+            self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
+            self.alien_fleet.start()
 
-        # initialize the Alien_fleet and start the game with 
-        self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
-        self.alien_fleet.start()
-
-
-    def hide_msg(self):
-        self.game_msg_t.clear()
+    
 
     def next_level(self):
 
-        self.display_msg(20,"yellow","NEXT LEVEL")
+        self.display_msg(20, "yellow","NEXT LEVEL",0)
         self.screen.ontimer(self.hide_msg, 1000) 
         
-
         self.set_level("add",1)
         self.display_level()
 
@@ -221,5 +224,94 @@ class Game :
         self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
         self.alien_fleet.start()
         return
+    
+    def end_game(self):
+        # allow to execute only once per game the method 
+        if not self.game_in_progress : return
+        self.game_in_progress = False
+
+        if self.alien_fleet :  
+            self.alien_fleet.remove_fleet()
+
+        self.display_msg(30,"red","END GAME",0)
+        
+        # store score
+        player_name = self.screen.textinput("Player Name", "Please enter your name:")
+        self.screen.listen() # reactivate the listener because if not yhe onkeypressed doesn't work
+       
+        if player_name != None :
+            self.record_score(player_name, self.score, self.level-1)
+
+        # get 5 top scores and display them
+        top_scores = self.get_top_scores ( 5)
+        i=1
+        for score in top_scores:
+            display_string = f"{str(i)} : {score[1].ljust(15)}\t: {score[0]}\t (Date: {score[2]}) Level : {score[3]}"
+            self.display_msg(10,"white", display_string, i*20)
+            i+=1
+
+        return   
+    
+    def get_top_scores(self, top_n):
+        try:
+            # Lire le fichier et extraire les données
+            scores = []
+            with open(cte.SCORE_FILE, "r") as file:
+                for line in file:
+                    # Analyse de la ligne pour extraire la date, le nom et le score
+                    parts = line.strip().split(", ")
+                    if len(parts) == 4:
+                        date, name, score, level = parts
+                        scores.append((int(score), name, date, level))
+            
+            # Use heapq to get the top_n top scores
+            top_scores = heapq.nlargest(top_n, scores)
+            return top_scores
+        
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    def record_score(self, player, score, level):
+        
+        current_date = datetime.datetime.now().strftime("%d/%m/%Y")
+
+        file_name = cte.SCORE_FILE
+    
+        content = f"{current_date}, {player}, {score}, {level}\n"
+
+        with open(file_name, "a") as file:
+            file.write(content)
+
+        
+        return 
+    
+    def display_help(self):
+        self.hide_msg() # if help asked and the score is displayed
+
+        self.game_help_t.penup()
+        self.game_help_t.color("white")
+        offset_y = 20
+        
+        self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
+        texte = "first line "
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+        
+        self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 2*offset_y)
+        texte = "seconf line "
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+        
+        self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 3*offset_y)
+        texte = "third line"
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+
+        self.game_help_t.pendown()
+
+        return
+    
+    def clear_help(self):
+        self.game_help_t.clear()
+        return
+    
+        
         
 game_global = Game()
