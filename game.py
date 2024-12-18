@@ -312,16 +312,16 @@ class Game :# Class to manage the game
         offset_y = 20
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
-        texte = "first line "
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+        texte = "<- and -> to move  "
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 2*offset_y)
-        texte = "seconf line "
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+        texte = "space to shoot bullet "
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 3*offset_y)
-        texte = "third line"
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+        texte = "n for new game"
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
 
         self.game_help_t.pendown()
 
