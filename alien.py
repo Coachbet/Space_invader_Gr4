@@ -1,9 +1,11 @@
 import threading
+import random
 from turtle import Turtle
 import os
 
 import constante as cte
 import game
+from bomb import Bomb
 
 class Alien_fleet:
     def __init__(self, size, posW, posH, screen):
@@ -17,12 +19,18 @@ class Alien_fleet:
         return
 
     def start(self):
+        """
+            Input : none
+            Output: none
+            create alien and insert in the fleet list
+            activate alien in it own thread delayed (i seconds)
+        """
         for i in range (0,5):
             alien = Alien(self.posX_init + i*100 ,self.posY_init ,self.screen)
             self.fleet.append(alien)
 
-            timer = threading.Timer(i, alien.start)
-            timer.start()
+            th_timer = threading.Timer(i, alien.start)
+            th_timer.start()
 
         return
 
@@ -41,7 +49,7 @@ class Alien_fleet:
         for alien in self.fleet :
             x_alien, y_alien = alien.get_position()
             if x_bullet < x_alien + cte.ALIEN_WIDTH / 2 and x_bullet > x_alien - cte.ALIEN_WIDTH /2 :
-                if y_bullet - cte.BULLET_HEIGHT > y_alien - cte.ALIEN_HEIGHT/2 : # and y_bullet + cte.BULLET_HEIGHT < y_alien -cte.BULLET_HEIGHT :
+                if y_bullet - cte.BULLET_HEIGHT > y_alien - cte.ALIEN_HEIGHT/2 : 
                     print("contact")
                     return (alien)
 
@@ -55,15 +63,6 @@ class Alien_fleet:
             alien.delete()
         self.fleet.clear()
 
-    def remove (self, alien):
-        self.fleet.remove(alien)
-    
-    def remove_fleet(self):
-        for alien in self.fleet :
-            alien.delete()
-        self.fleet.clear()
-
-
 class Alien:
     def __init__(self, posW, posH, screen):
 
@@ -72,7 +71,7 @@ class Alien:
         self.current_y = posH
         self.width = cte.ALIEN_WIDTH
         self.heigth = cte.ALIEN_HEIGHT # if later we want modify alien with new model and new file
-        self.available = True
+
         self.screen = screen
 
         alien_image_path = os.path.join(cte.DIRECTORY_IMAGE, cte.IMAGE__ALIEN_FILE)
@@ -100,30 +99,80 @@ class Alien:
         return self.alien_t.position()
 
     def start (self):
+        """
+        Input : none
+        Output: none
+        calculate speed
+        call move
+        """
+    
         speed = int(cte.ALIEN_SPEED / game.game_global.get_level())
         self.move(cte.ALIEN_WIDTH ,cte.ALIEN_HEIGHT /5, speed )
 
     def move(self, step_x, step_y, speed):
+        """
+        Input : position (x,y) , speed
+        Output: recursive on timer
+        
+        move the alien regarding level
+        check if alien out of screen 
 
-        # if not self : return # if the object has been delete during the ontimer
+        """
+        # return  if the object has been delete during the ontimer
         if not hasattr(self, 'alien_t'): 
             print ('move impossible no alien_t')
             return
 
-        if not self.available : return # if n move launch by timer : security
-
-     
-        # print (self.alien_t.position())
         self.alien_t.penup()
         current_x, current_y = self.alien_t.position()
-        # if alien goes out of screen, inverse step_x
-        if current_x + step_x > cte.SCREEN_WIDTH /2 or current_x + step_x < -cte.SCREEN_WIDTH /2 :
-            step_x = -step_x
+        level = game.game_global.get_level()
+        if  level <= 3 :
+            # if alien goes out of screen, inverse step_x
+            if current_x + step_x > cte.SCREEN_WIDTH /2 or current_x + step_x < -cte.SCREEN_WIDTH /2 :
+                step_x = -step_x
 
-        current_x = current_x + step_x
-        current_y = current_y - step_y
-        self.alien_t.setx(current_x) 
-        self.alien_t.sety(current_y) 
+            current_x = current_x + step_x
+            current_y = current_y - step_y
+            self.alien_t.setx(current_x) 
+            self.alien_t.sety(current_y) 
+
+        elif level > 3 and level <= 6 :
+            direction = random.randint(-1, 1) # value-1,0,1
+            if current_x + step_x > cte.SCREEN_WIDTH /2 or current_x + step_x < -cte.SCREEN_WIDTH /2 :
+                step_x = -step_x
+
+            current_x = current_x + direction * step_x
+            if current_x  > cte.SCREEN_WIDTH /2 :
+                current_x  = cte.SCREEN_WIDTH /2 -10
+            if current_x  < -cte.SCREEN_WIDTH /2 :
+                current_x  = -cte.SCREEN_WIDTH /2+10
+            current_y = current_y - step_y
+            self.alien_t.setx(current_x) 
+            self.alien_t.sety(current_y)    
+
+            if random.randint(1, 100) > 98: # Bomb in 2%
+                bomb = Bomb(  6 ,  current_x, current_y , self.screen) 
+                bomb.move()
+
+        
+        elif level > 6  :
+            direction = random.randint(-1, 1) # value-1,0,1
+            if current_x + step_x > cte.SCREEN_WIDTH /2 or current_x + step_x < -cte.SCREEN_WIDTH /2 :
+                step_x = -step_x
+
+            current_x = current_x + direction * 2 * step_x
+            if current_x  > cte.SCREEN_WIDTH /2 :
+                current_x  = cte.SCREEN_WIDTH /2 -10
+            if current_x  < -cte.SCREEN_WIDTH /2 :
+                current_x  = -cte.SCREEN_WIDTH /2+10
+            current_y = current_y - step_y
+            self.alien_t.setx(current_x) 
+            self.alien_t.sety(current_y)    
+
+            if random.randint(1, 100) > 96 : # Bomb in 4%
+                bomb = Bomb(  6 ,  current_x, current_y , self.screen) 
+                bomb.move()
+
         self.alien_t.pendown()
 
 
@@ -133,19 +182,16 @@ class Alien:
             self.move_possible = False
             game.game_global.end_game()
 
-
         if self.move_possible :
             self.screen.ontimer(lambda: self.move(step_x,step_y,speed), speed)
 
     def display_crash(self):
         self.alien_t.shape(self.boom_image_path)
-        self.screen.ontimer(self.set_crash, 500) 
+        self.screen.ontimer(self.delete_alien, 500) 
 
 
-    def set_crash(self):
+    def delete_alien(self):
 
-
-        self.available = False
         self.delete()
         if self in game.game_global.alien_fleet.fleet :
             game.game_global.alien_fleet.remove_alien(self)
@@ -161,13 +207,11 @@ class Alien:
     def delete(self):
         # Memory management : need to del object in the fleet_list and the object itself
         #  
-
         if not hasattr(self, 'alien_t'): 
             print ('delete impossible no alien_t')
             return
         self.alien_t.hideturtle()
        
-
         del self.alien_t
         del self
         return

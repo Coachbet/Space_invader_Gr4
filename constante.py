@@ -7,15 +7,17 @@ DIRECTORY_IMAGE = "images"
 IMAGE__SHIP_FILE = "space_ship.gif"
 IMAGE__ALIEN_FILE = "alien.gif"
 IMAGE__BOOM_FILE = "boom.gif"
+IMAGE__BOMB_FILE = "bomb.gif"
 
 SCORE_FILE = "scores.txt"
-
 
 SHIP_WIDTH = 50
 SHIP_HEIGHT = 50
 ALIEN_WIDTH = 50
 ALIEN_HEIGHT = 50
 
+BOMB_HEIGHT = 30
+BOMB_SPEED = 80
 BULLET_HEIGHT = 10 # bullet mouvement
 BULLET_SPEED = 50 # one move in SHOOT_SPEED milliseconds
 MAX_BULLET_BY_LEVEL = 50
