@@ -72,11 +72,13 @@ def space_invaders():
     screen.onkeypress(lambda: ship.move("Left"),"Left") 
     screen.onkeypress(lambda: ship.move("Right"),"Right") 
     screen.onkeypress(ship.fire, "space") 
+
     screen.onkeypress(game.game_global.display_help, "h") 
     screen.onkeypress(game.game_global.display_help, "H") 
     screen.onkeypress(game.game_global.clear_help, "Escape") 
     
     
+
     update(screen)  
     screen.mainloop()
 
@@ -85,6 +87,7 @@ def space_invaders():
 """
     # initialize the level
     game.game_global.set_level("reset",5)
+
     game.game_global.display_level()
 
     # initialize the score
@@ -100,7 +103,9 @@ def space_invaders():
     # initialize the Alien_fleet and start the game with 
     game.game_global.alien_fleet = Alien_fleet(40,  -380, 380, screen)
     game.game_global.alien_fleet.start()
+
 """
+
 
 space_invaders()
 
