@@ -7,6 +7,9 @@ DIRECTORY_IMAGE = "images"
 IMAGE__SHIP_FILE = "space_ship.gif"
 IMAGE__ALIEN_FILE = "alien.gif"
 
+IMAGE__BOOM_FILE = "boom.gif"
+
+
 SHIP_WIDTH = 50
 SHIP_HEIGHT = 50
 ALIEN_WIDTH = 50

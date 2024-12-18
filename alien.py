@@ -39,7 +39,7 @@ class Alien_fleet:
         """
         
         for alien in self.fleet :
-            x_alien, y_alien = alien.alien_t.position()
+            x_alien, y_alien = alien.get_position()
             if x_bullet < x_alien + cte.ALIEN_WIDTH / 2 and x_bullet > x_alien - cte.ALIEN_WIDTH /2 :
                 if y_bullet - cte.BULLET_HEIGHT > y_alien - cte.ALIEN_HEIGHT/2 : # and y_bullet + cte.BULLET_HEIGHT < y_alien -cte.BULLET_HEIGHT :
                     print("contact")
@@ -65,7 +65,12 @@ class Alien:
         else:
             print(f"Error: Image file '{alien_image_path }' not found!")
             return
-        
+        self.boom_image_path = os.path.join(cte.DIRECTORY_IMAGE, cte.IMAGE__BOOM_FILE)
+        if os.path.exists(self.boom_image_path ):
+            screen.addshape(self.boom_image_path )
+        else:
+            print(f"Error: Image file '{self.boom_image_path }' not found!")
+            return
         self.alien_t = Turtle()
         self.alien_t.shape(alien_image_path)
         self.alien_t.speed(5)
@@ -73,6 +78,9 @@ class Alien:
         self.alien_t.goto(posW,posH)
         self.alien_t.pendown()
 
+
+    def get_position(self):
+        return self.alien_t.position()
 
     def start (self):
         speed = int(cte.ALIEN_SPEED / game.game_global.get_level())
@@ -107,8 +115,13 @@ class Alien:
         if self.move_possible :
             self.screen.ontimer(lambda: self.move(step_x,step_y,speed), speed)
 
+
+    def display_crash(self):
+        self.alien_t.shape(self.boom_image_path)
+        self.screen.ontimer(self.set_crash, 500) 
+
+
     def set_crash(self):
-        print ("explosion")
         self.available = False
         self.delete()
 

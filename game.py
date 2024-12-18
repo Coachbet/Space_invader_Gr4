@@ -168,16 +168,11 @@ class Game :
         self.game_msg_t.home()
         self.game_msg_t.pendown()
         self.game_msg_t.color(color)
-        
-       
-        texte = "END GAME"
         self.game_msg_t.write(texte, align="Center", font=("Arial", size, "bold"))
 
     def end_game(self):
     
         self.display_msg(30,"red","END GAME")
-        
-        
         # add score on another line just behind TODO
 
         return    
@@ -188,7 +183,8 @@ class Game :
         self.game_msg_t.clear()
 
         # initialize the level
-        self.set_level("reset",0)
+        self.set_level("reset",1)
+
         self.display_level()
 
         # initialize the score
@@ -203,12 +199,15 @@ class Game :
         self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
         self.alien_fleet.start()
 
+
+    def hide_msg(self):
+        self.game_msg_t.clear()
+
     def next_level(self):
-        self.game_msg_t.clear()
-        self.display_msg(200,"yellow","NEXT LEVEL")
-        time.sleep(1)
-        self.game_msg_t.hideturtle
-        self.game_msg_t.clear()
+
+        self.display_msg(20,"yellow","NEXT LEVEL")
+        self.screen.ontimer(self.hide_msg, 1000) 
+        
 
         self.set_level("add",1)
         self.display_level()
