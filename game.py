@@ -5,7 +5,6 @@ import datetime
 import heapq
 
 
-
 import constante as cte
 from alien import Alien_fleet
 
@@ -25,7 +24,6 @@ class Game :
         Initialize attribut and Turtle object
         """
         self.game_in_progress = True
-
         self.level = 1
         self.score = 0
         self.game_time  = 0
@@ -45,7 +43,6 @@ class Game :
         self.game_score_t.hideturtle()
         self.game_help_t = Turtle()
         self.game_help_t.hideturtle()  
-
 
 
     def add_screen (self,screen):
@@ -69,6 +66,14 @@ class Game :
         """   
         self.ship = ship
         return
+    
+    def get_ship (self):
+        """
+        add_screen
+        Input : 
+        Output : ship object
+       """   
+        return self.ship
     
     def set_score(self,action, value):
         """
@@ -172,7 +177,6 @@ class Game :
             
         return    
     
-
     def display_msg(self,  size, color,texte, offset_y):
         self.game_msg_t.penup()
         self.game_msg_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
@@ -180,7 +184,6 @@ class Game :
         self.game_msg_t.color(color)
         self.game_msg_t.write(texte, align="Center", font=("Arial", size, "bold"))
         
-
     def hide_msg(self):
         self.game_msg_t.clear()
      
@@ -191,17 +194,10 @@ class Game :
         if self.alien_fleet :  
             self.alien_fleet.remove_fleet()
 
-
         self.game_msg_t.clear()
 
         # initialize the level
-
-        self.set_level("reset",5) # 5 instead of 1 for testing
-
-
-        self.set_level("reset",5) # 5 instead of 1 for testing
-
-
+        self.set_level("reset",1) # 5 for testing
         self.display_level()
 
         # initialize the score
@@ -217,11 +213,9 @@ class Game :
             self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
             self.alien_fleet.start()
 
-
     
 
     def next_level(self):
-
 
         self.display_msg(20, "yellow","NEXT LEVEL",0)
         self.screen.ontimer(self.hide_msg, 1000) 
@@ -238,7 +232,6 @@ class Game :
         self.alien_fleet = Alien_fleet(40,  -380, 380, self.screen)
         self.alien_fleet.start()
         return
-
     
     def end_game(self):
         # allow to execute only once per game the method 
@@ -267,7 +260,6 @@ class Game :
 
         return   
     
-
     def get_top_scores(self, top_n):
         try:
             # Lire le fichier et extraire les données
@@ -280,10 +272,8 @@ class Game :
                         date, name, score, level = parts
                         scores.append((int(score), name, date, level))
             
-
             # Use heapq to get the top_n top scores
             top_scores = heapq.nlargest(top_n, scores)
-
             return top_scores
         
         except Exception as e:
@@ -302,7 +292,6 @@ class Game :
 
         
         return 
-
     
     def display_help(self):
         self.hide_msg() # if help asked and the score is displayed
@@ -332,6 +321,5 @@ class Game :
         return
     
         
-
         
 game_global = Game()
