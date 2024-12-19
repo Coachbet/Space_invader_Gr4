@@ -1,21 +1,22 @@
-from turtle import Turtle
-import turtle
 
-import datetime
-import heapq
+from turtle import Turtle# Import the Turtle class
+import turtle# Import the turtle module
+
+import datetime# Import the datetime module for date handling
+import heapq# Import heapq for finding top scores
 
 
-import constante as cte
-from alien import Alien_fleet
+import constante as cte# Import constants from constante.py
+from alien import Alien_fleet# Import the Alien_fleet class
 
-class Game :
+class Game :# Class to manage the game
     """
-    class Game
+    class Game 
 
     Manage bullet count and score
     Only one instance used as a global variable
     """
-    def __init__(self):
+    def __init__(self): # Initialize game attributes
         """
         __init__
         Input : none
@@ -23,16 +24,20 @@ class Game :
 
         Initialize attribut and Turtle object
         """
-        self.game_in_progress = True
-        self.level = 1
-        self.score = 0
-        self.game_time  = 0
-        self.bullet_count = cte.MAX_BULLET_BY_LEVEL
-        self.alien_fleet = None
-        self.ship = None
-        self.screen = 0
-        self.game_msg_t = Turtle()
-        self.game_msg_t.hideturtle()  
+
+        self.game_in_progress = True# Whether a game is ongoing
+        self.level = 1# Current level
+        self.score = 0# Current score
+        self.game_time  = 0# Track game time
+        self.bullet_count = cte.MAX_BULLET_BY_LEVEL# Initial bullet count
+        self.alien_fleet = None# Placeholder for alien fleet
+        self.ship = None# Placeholder for the ship
+        self.screen = 0# Placeholder for the screen
+        self.game_msg_t = Turtle()# Turtle object for displaying messages
+        self.game_msg_t.hideturtle()  # Hide the message turtle
+        
+        # Additional turtles for level, score, bullets, and help messages
+
         self.game_level_t_t = Turtle()
         self.game_level_t_t.hideturtle()
         self.game_bullet_t = Turtle()
@@ -153,14 +158,10 @@ class Game :
 
     def display_bullet_count(self, action, value):
         """
-        display_bullet_count
-        Input : action, value
-        Output : none
-
-        Display the bullet count
-        Displat value or message depending on action
-        """   
-
+        Displays the bullet count or a related message.
+        - action="no more": Displays a "No more bullets" message.
+        - action="in progress": Displays the current bullet count.
+        """
         self.game_bullet_t.clear()
         self.game_bullet_t.penup()
         self.game_bullet_t.goto(350,380)
@@ -178,18 +179,31 @@ class Game :
         return    
     
     def display_msg(self,  size, color,texte, offset_y):
+
+        """
+        Displays a message on the screen.
+        - size: Font size.
+        - color: Text color.
+        - texte: The message to display.
+        - offset_y: Vertical offset for the message.
+        """
+
         self.game_msg_t.penup()
         self.game_msg_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
         self.game_msg_t.pendown()
         self.game_msg_t.color(color)
         self.game_msg_t.write(texte, align="Center", font=("Arial", size, "bold"))
         
-    def hide_msg(self):
+
+    def hide_msg(self):#  Clears the current message from the screen.
+
         self.game_msg_t.clear()
      
 
-    def new_game(self,status):
+    def new_game(self,status):#Starts a new game or resets the current game state.
+
         self.game_in_progress = True
+
 
         if self.alien_fleet :  
             self.alien_fleet.remove_fleet()
@@ -197,7 +211,9 @@ class Game :
         self.game_msg_t.clear()
 
         # initialize the level
-        self.set_level("reset",1) # 5 for testing
+
+        self.set_level("reset",7) # 5 for testing
+
         self.display_level()
 
         # initialize the score
@@ -205,6 +221,7 @@ class Game :
         self.display_score()
 
         # Initialize the Ship and amunitions
+        self.ship.ship_t.shape(self.ship.ship_image_path)
         self.ship.set_bullet_loader(cte.MAX_BULLET_BY_LEVEL + cte.NB_BULLET_BY_LEVEL * (self.level-1))
         self.display_bullet_count("in progress", self.ship.get_bullet_loader())
         
@@ -215,7 +232,10 @@ class Game :
 
     
 
-    def next_level(self):
+
+    def next_level(self):#Moves the game to the next level.
+        if not self.game_in_progress : return
+        
 
         self.display_msg(20, "yellow","NEXT LEVEL",0)
         self.screen.ontimer(self.hide_msg, 1000) 
@@ -223,7 +243,7 @@ class Game :
         self.set_level("add",1)
         self.display_level()
 
-# Initialize  amunitions
+        # Initialize  amunitions
         self.ship.set_bullet_loader(cte.MAX_BULLET_BY_LEVEL + cte.NB_BULLET_BY_LEVEL * (self.level-1))
         self.display_bullet_count("in progress", self.ship.get_bullet_loader())
         
@@ -233,7 +253,9 @@ class Game :
         self.alien_fleet.start()
         return
     
-    def end_game(self):
+
+    def end_game(self):#Ends the current game and displays the top scores.
+
         # allow to execute only once per game the method 
         if not self.game_in_progress : return
         self.game_in_progress = False
@@ -241,7 +263,9 @@ class Game :
         if self.alien_fleet :  
             self.alien_fleet.remove_fleet()
 
-        self.display_msg(30,"red","END GAME",0)
+
+        self.display_msg(30,"red","GAME OVER",0)
+
         
         # store score
         player_name = self.screen.textinput("Player Name", "Please enter your name:")
@@ -260,7 +284,9 @@ class Game :
 
         return   
     
-    def get_top_scores(self, top_n):
+
+    def get_top_scores(self, top_n):#   Retrieves the top N scores from the score file
+
         try:
             # Lire le fichier et extraire les données
             scores = []
@@ -279,7 +305,10 @@ class Game :
         except Exception as e:
             print(f"An error occurred: {e}")
 
-    def record_score(self, player, score, level):
+
+    def record_score(self, player, score, level):#Records the player's score in the score file.
+
+
         
         current_date = datetime.datetime.now().strftime("%d/%m/%Y")
 
@@ -293,7 +322,10 @@ class Game :
         
         return 
     
-    def display_help(self):
+
+    def display_help(self):#Displays help instructions on the screen.
+
+
         self.hide_msg() # if help asked and the score is displayed
 
         self.game_help_t.penup()
@@ -301,25 +333,34 @@ class Game :
         offset_y = 20
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
-        texte = "first line "
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+
+        texte = "< > to moove"
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 2*offset_y)
-        texte = "seconf line "
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+        texte = "space bar to shoot "
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 3*offset_y)
-        texte = "third line"
-        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "bold"))
+        texte = "n to play again"
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
+
+        self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - 4*offset_y)
+        texte = "escape to get out of the help"
+        self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
+
 
         self.game_help_t.pendown()
 
         return
     
-    def clear_help(self):
+
+    def clear_help(self):  # Clears the help instructions from the screen.
+
+
         self.game_help_t.clear()
         return
     
         
         
-game_global = Game()
+game_global = Game()# Initialize the game as a global variable

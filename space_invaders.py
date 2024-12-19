@@ -1,4 +1,4 @@
-# from turtle import *
+
 import constante as cte
 
 from turtle import Turtle
@@ -33,7 +33,7 @@ def create_screen():
     screen.tracer(0)
     return screen
 
-def update(screen):
+def update(screen): 
     """
     update
     Input : screen object
@@ -42,7 +42,7 @@ def update(screen):
     Update the screen at regular intervals depending on FPS definie in constante.py
     """
     screen.update()
-    screen.ontimer(lambda: update(screen), int(1000 / cte.FPS)) # lambda== a function
+    screen.ontimer(lambda: update(screen), int(1000 / cte.FPS)) # lambda== a simple function
 
 def space_invaders():
     """
