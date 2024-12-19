@@ -26,3 +26,4 @@ NB_BULLET_BY_LEVEL = 10 # Additional bullets per level
 ALIEN_SPEED = 1000 # Speed of alien movement
 NB_MAX_ALIEN = 5# Maximum number of aliens
 FPS = 60 # Frames per second
+

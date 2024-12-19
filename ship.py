@@ -23,6 +23,7 @@ class Ship:# Class to manage the player's ship
         Initialize attribut and Turtle object iwth image
         """    
          
+
         self.ship_image_path = os.path.join(cte.DIRECTORY_IMAGE, cte.IMAGE__SHIP_FILE) # Path to the ship image
         if os.path.exists(self.ship_image_path ):# Check if the ship image file exists
             screen.addshape(self.ship_image_path )  # Add the ship image to the screen
@@ -55,6 +56,7 @@ class Ship:# Class to manage the player's ship
 
 
     def set_bullet_loader(self,value): # Set the bullet loader count
+
         """
         set_bullet_loader
         Input : value
@@ -86,12 +88,14 @@ class Ship:# Class to manage the player's ship
         Move the turtle object ship depending on the key Left or Right
         """   
   
+
         if key == "Left" and self.current_x - cte.STEP_SHIP > - cte.SCREEN_WIDTH/2: # Move left if within bounds
             self.current_x=self.current_x - 2*cte.STEP_SHIP# Update the X position
             self.ship_t.setx(self.current_x)# Move the ship to the new X position
         elif key == "Right" and self.current_x + 6 * cte.STEP_SHIP < cte.SCREEN_WIDTH/2:# Move right if within bounds
             self.current_x=self.current_x + cte.STEP_SHIP # Update the X position
             self.ship_t.setx(self.current_x) # Move the ship to the new X position
+
 
         # print (self.ship_t.position())
         return
@@ -115,6 +119,7 @@ class Ship:# Class to manage the player's ship
                 game.game_global.display_bullet_count("no more", self.bullet_loader)# Notify no bullets left
                 return
 
+
         bullet_id = Bullet( 10, self.ship_t.xcor() , self.current_y + cte.SHIP_HEIGHT , self.screen) # Create a bullet
         self.bullet_list.append (bullet_id)# Add the bullet to the list
         self.bullet_loader -= 1# Decrease the bullet count
@@ -130,6 +135,7 @@ class Ship:# Class to manage the player's ship
         self.screen.ontimer(game.game_global.end_game, 500) # Schedule the end game sequence
 
 
+
      
     def get_ship_contact(self, x_bomb , y_bomb): # Check if the ship is hit by a bomb
         
@@ -139,4 +145,7 @@ class Ship:# Class to manage the player's ship
                 print("contact ship")# Log the collision
                 return True# Return collision detected
 
+
         return False# Return no collision
+
+        

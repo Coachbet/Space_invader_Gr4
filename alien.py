@@ -1,3 +1,4 @@
+
 import threading# Import threading to create threads for alien movement
 import random # Import random for random movements
 from turtle import Turtle# Import Turtle module for game graphics
@@ -7,6 +8,7 @@ import constante as cte# Import constants from constante.py
 import game# Import the game module
 
 from bomb import Bomb # Import the Bomb class
+
 
 class Alien_fleet:
     def __init__(self, size, posW, posH, screen):# Initialize the alien fleet attributes
@@ -21,6 +23,7 @@ class Alien_fleet:
 
     def start(self):
         """
+
         Create aliens and add them to the fleet list.
         Each alien starts its movement in its own thread with a delay.
         """
@@ -30,6 +33,7 @@ class Alien_fleet:
             self.fleet.append(alien)# Add the alien to the fleet list
 
             th_timer = threading.Timer(i, alien.start)  # Start alien movement in a separate thread with a delay
+
 
             th_timer.start()
 
@@ -63,9 +67,10 @@ class Alien_fleet:
         """
         Remove all aliens from the fleet.
         """
-        for alien in self.fleet :
+        for alien in self.fleet : 
             alien.delete()
         self.fleet.clear()
+
 
     def get_nb_alien(self):
         """
@@ -73,6 +78,7 @@ class Alien_fleet:
         """
         return len(self.fleet)
     
+
 # Class representing an individual alien
 
 class Alien:
@@ -84,6 +90,7 @@ class Alien:
         self.width = cte.ALIEN_WIDTH# Alien width
         self.heigth = cte.ALIEN_HEIGHT  # Alien height
         self.previous_nb_alien = cte.NB_MAX_ALIEN# Initial number of aliens
+
         self.screen = screen
 
         alien_image_path = os.path.join(cte.DIRECTORY_IMAGE, cte.IMAGE__ALIEN_FILE)
@@ -92,16 +99,20 @@ class Alien:
         else:
             print(f"Error: Image file '{alien_image_path }' not found!")
             return
+
         
  # Load explosion image
+
         self.boom_image_path = os.path.join(cte.DIRECTORY_IMAGE, cte.IMAGE__BOOM_FILE)
         if os.path.exists(self.boom_image_path ):
             screen.addshape(self.boom_image_path )
         else:
             print(f"Error: Image file '{self.boom_image_path }' not found!")
             return
+
         
  # Create the Turtle object for the alien
+
         self.alien_t = Turtle()
         self.alien_t.shape(alien_image_path)
         self.alien_t.speed(5)
@@ -117,11 +128,13 @@ class Alien:
 
     def start (self):
         """
+
         Start the alien's movement based on the current game level.
         """
         # speed increases by 10% by level
         speed = int(cte.ALIEN_SPEED -( game.game_global.get_level() - 1)*cte.ALIEN_SPEED/10 )
         print(f"speed init : {speed}")
+
         self.move(cte.ALIEN_WIDTH ,cte.ALIEN_HEIGHT /5, speed )
 
     def move(self, step_x, step_y, speed):
@@ -172,7 +185,9 @@ class Alien:
         
         elif level > 6  :
             direction = random.randint(-1, 1) # value-1,0,1
+
             if current_x + 2 * step_x > cte.SCREEN_WIDTH /2 or current_x + 2 * step_x < -cte.SCREEN_WIDTH /2 :
+
                 step_x = -step_x
 
             current_x = current_x + direction * 2 * step_x
@@ -204,7 +219,9 @@ class Alien:
                 print(f"speed change : {speed}")
                 self.previous_nb_alien -=1
 
+
             self.screen.ontimer(lambda: self.move(step_x,step_y,speed), speed)
+
 
     def display_crash(self):
         self.alien_t.shape(self.boom_image_path)

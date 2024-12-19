@@ -1,3 +1,4 @@
+
 from turtle import Turtle# Import the Turtle class
 import turtle# Import the turtle module
 
@@ -23,6 +24,7 @@ class Game :# Class to manage the game
 
         Initialize attribut and Turtle object
         """
+
         self.game_in_progress = True# Whether a game is ongoing
         self.level = 1# Current level
         self.score = 0# Current score
@@ -35,6 +37,7 @@ class Game :# Class to manage the game
         self.game_msg_t.hideturtle()  # Hide the message turtle
         
         # Additional turtles for level, score, bullets, and help messages
+
         self.game_level_t_t = Turtle()
         self.game_level_t_t.hideturtle()
         self.game_bullet_t = Turtle()
@@ -176,6 +179,7 @@ class Game :# Class to manage the game
         return    
     
     def display_msg(self,  size, color,texte, offset_y):
+
         """
         Displays a message on the screen.
         - size: Font size.
@@ -183,12 +187,14 @@ class Game :# Class to manage the game
         - texte: The message to display.
         - offset_y: Vertical offset for the message.
         """
+
         self.game_msg_t.penup()
         self.game_msg_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
         self.game_msg_t.pendown()
         self.game_msg_t.color(color)
         self.game_msg_t.write(texte, align="Center", font=("Arial", size, "bold"))
         
+
     def hide_msg(self):#  Clears the current message from the screen.
 
         self.game_msg_t.clear()
@@ -198,13 +204,16 @@ class Game :# Class to manage the game
 
         self.game_in_progress = True
 
+
         if self.alien_fleet :  
             self.alien_fleet.remove_fleet()
 
         self.game_msg_t.clear()
 
         # initialize the level
+
         self.set_level("reset",7) # 5 for testing
+
         self.display_level()
 
         # initialize the score
@@ -223,9 +232,11 @@ class Game :# Class to manage the game
 
     
 
+
     def next_level(self):#Moves the game to the next level.
         if not self.game_in_progress : return
         
+
         self.display_msg(20, "yellow","NEXT LEVEL",0)
         self.screen.ontimer(self.hide_msg, 1000) 
         
@@ -242,7 +253,9 @@ class Game :# Class to manage the game
         self.alien_fleet.start()
         return
     
+
     def end_game(self):#Ends the current game and displays the top scores.
+
         # allow to execute only once per game the method 
         if not self.game_in_progress : return
         self.game_in_progress = False
@@ -250,7 +263,9 @@ class Game :# Class to manage the game
         if self.alien_fleet :  
             self.alien_fleet.remove_fleet()
 
+
         self.display_msg(30,"red","GAME OVER",0)
+
         
         # store score
         player_name = self.screen.textinput("Player Name", "Please enter your name:")
@@ -269,7 +284,9 @@ class Game :# Class to manage the game
 
         return   
     
+
     def get_top_scores(self, top_n):#   Retrieves the top N scores from the score file
+
         try:
             # Lire le fichier et extraire les données
             scores = []
@@ -288,7 +305,9 @@ class Game :# Class to manage the game
         except Exception as e:
             print(f"An error occurred: {e}")
 
+
     def record_score(self, player, score, level):#Records the player's score in the score file.
+
 
         
         current_date = datetime.datetime.now().strftime("%d/%m/%Y")
@@ -303,7 +322,9 @@ class Game :# Class to manage the game
         
         return 
     
+
     def display_help(self):#Displays help instructions on the screen.
+
 
         self.hide_msg() # if help asked and the score is displayed
 
@@ -312,6 +333,7 @@ class Game :# Class to manage the game
         offset_y = 20
         
         self.game_help_t.goto(0, cte.SCREEN_HEIGHT/8 - offset_y)
+
         texte = "< > to moove"
         self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
         
@@ -327,11 +349,14 @@ class Game :# Class to manage the game
         texte = "escape to get out of the help"
         self.game_help_t.write(texte, align="Center", font=("Arial", 10, "normal"))
 
+
         self.game_help_t.pendown()
 
         return
     
+
     def clear_help(self):  # Clears the help instructions from the screen.
+
 
         self.game_help_t.clear()
         return

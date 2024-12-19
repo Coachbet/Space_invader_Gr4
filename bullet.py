@@ -48,10 +48,12 @@ class Bullet:# Class representing a bullet
             self.move_possible = False# Disable further movement
             # alien explosion
             
+
             alien.display_crash()# Trigger alien's crash animation
             game.game_global.set_score("add",1) # Increment score
             game.game_global.display_score() # Display updated score
             self.delete() # Delete the bullet
+
             return
 
         if self.move_possible :# If movement is still allowed
